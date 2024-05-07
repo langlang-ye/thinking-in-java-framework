@@ -4,12 +4,40 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 
 public class ConvertTypeTest {
 
+
     /**
-     * {@link ArrayUtils } Apache Commons Lang3 包中的工具类  内部原理: 使用循环将基本类型数组中的元素给复制到一个新的对象数组中
+     * 集合和数组的转换
+     */
+    @Test
+    public void collectionToArray() {
+
+        // 下面三种写法都是 声明了一个长度为 0 的 Object 数组, 用于类型转换 T[] a
+        Object[] obj1 = new Object[]{};
+        Object[] obj2 = new Object[0];
+        Object[] obj3 = {};
+
+        Set<String> set = new LinkedHashSet<>();
+        set.add("aa");
+        set.add("bb");
+        set.add("cc");
+        set.add("dd");
+
+//        String[] array = set.toArray(new String[]{});
+        String[] array = set.toArray(new String[0]); // spring 源码中
+        Arrays.stream(array).forEach(System.out::println);
+
+    }
+
+    /**
+     * {@link ArrayUtils } Apache Commons Lang3 包中的工具类
+     * 内部原理: 使用循环将基本类型数组中的元素给复制到一个新的对象数组中
      */
     @Test
     public void IntegerTest() {

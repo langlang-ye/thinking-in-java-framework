@@ -1,4 +1,4 @@
-package com.langlang.extend;
+package com.langlang.oop.extend;
 
 public class Animal {
 
