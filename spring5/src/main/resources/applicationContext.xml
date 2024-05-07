@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <bean id="student" class="com.langlang.bean.Student">
+        <property name="name" value="lisi"></property>
+        <property name="age" value="12"></property>
+    </bean>
+
+    <!-- 通过构造方法 constructor-arg 给属性赋值,
+        通过工厂获取  getBean("cat", "small Duck") 可以覆盖掉 constructor-arg 配置的值
+        property 标签属性赋值会覆盖掉构造方法里的赋值
+       -->
+
+    <!-- 给 duck 设置别名 别名可以套娃 -->
+    <alias name="coco" alias="tom" />
+    <alias name="cat" alias="coco" />
+
+    <bean id="cat" class="com.langlang.bean.Cat" scope="prototype"  >
+        <constructor-arg  name="name" value="cat" />
+        <constructor-arg name="age" value="4" />
+
+        <!-- <property name="name" value=cat-tom"></property>
+         <property name="age" value="2"></property>-->
+    </bean>
+
+    <beans xmlns="http://www.springframework.org/schema/beans"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+        <bean id="star" class="com.langlang.bean.Star">
+            <property name="name" value="jack"></property>
+        </bean>
+    </beans>
+
+</beans>
