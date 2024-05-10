@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+<!-- 包扫描、只要标注了@Controller、@Service、@Repository，@Component -->
+<!-- use-default-filters = "false" 禁用默认的扫描规则；默认的扫描规则就是扫描所有的，只有禁用这个规则后，只包含的配置才可以生效 -->
+ <!-- <context:component-scan base-package="com.langlang" use-default-filters="false"></context:component-scan> -->
+
+	<!-- <context:property-placeholder location="classpath:/person.properties"/> -->
+	<context:property-placeholder location="classpath:person.properties"/>
+	<!-- <context:property-placeholder location="person.properties"/> --> <!-- 两种方法 -->
+
+<!-- bean 标签配置一些组件 -->
+<!-- <bean></bean> -->
+<!-- init-method="" destroy-method="" 初始化和销毁的方法 -->
+<!-- scope: prototype singleton request session -->
+<bean id="person" class="com.langlang.bean.Person" scope="prototype" >  <!-- depends-on="book, user" -->
+	<property name="age" value="18"></property>
+	<property name="name" value="zhangsan"></property>
+	
+	<!-- ${}；取出配置文件【properties】中的值:
+			需要导入 context 命名空间
+			指定配置文件的路径
+	
+	 -->
+	<!-- <property name="age" value="${}"></property> -->
+	<property name="nickName" value="${person.nickName}"></property>
+</bean>
+
+
+	<!-- 开启基于注解版的切面功能 -->
+	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+	
+	<!-- 开启基于注解版的事务管理功能 -->
+	<tx:annotation-driven/>
+</beans>

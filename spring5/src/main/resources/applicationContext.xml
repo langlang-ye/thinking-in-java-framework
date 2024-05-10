@@ -26,12 +26,13 @@
          <property name="age" value="2"></property>-->
     </bean>
 
+    <!-- beans 标签可以嵌套 -->
     <beans xmlns="http://www.springframework.org/schema/beans"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 
-        <bean id="star" class="com.langlang.bean.Star">
+        <bean id="star" class="com.langlang.bean.Student">
             <property name="name" value="jack"></property>
         </bean>
     </beans>
