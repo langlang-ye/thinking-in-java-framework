@@ -28,17 +28,20 @@ import com.langlang.bean.Car;
  * 		单实例：容器关闭的时候
  * 		多实例：容器不会管理这个bean；容器不会调用销毁方法；
  * 
- * 
+ * applyBeanPostProcessorsBeforeInitialization: 初始化之前执行
  * 遍历得到容器中所有的BeanPostProcessor；挨个执行beforeInitialization，
  * 一但返回null，跳出for循环，不会执行后面的BeanPostProcessor.postProcessorsBeforeInitialization
+ * applyBeanPostProcessorsAfterInitialization 执行逻辑类似
+ *
  * 
  * BeanPostProcessor原理
  * populateBean(beanName, mbd, instanceWrapper);给bean进行属性赋值
  * initializeBean
  * {
- * applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName);
+ * invokeAwareMethods(beanName, bean);  执行各种 aware 接口的回调方法
+ * applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName); 初始化之前执行
  * invokeInitMethods(beanName, wrappedBean, mbd);执行自定义初始化
- * applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
+ * applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName); 初始化之后执行
  *}
  * 
  * 

@@ -12,7 +12,7 @@ public class Boss {
 	private Dog dog;
 	
 	//构造器要用的组件，都是从容器中获取
-	@Autowired	// TODO @Autowired 在构造器 或是方法参数位置 省略问题
+	@Autowired	// todo @Autowired 在构造器 或是方法参数位置 省略问题
 	public Boss( Car car) { // @Autowired
 		this.car = car;
 		System.out.println("Boss...有参构造器");

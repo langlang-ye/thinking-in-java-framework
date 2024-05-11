@@ -19,8 +19,7 @@ public class MyImportSelector implements ImportSelector{
 	//AnnotationMetadata:当前标注@Import注解的类的所有注解信息
 	@Override
 	public String[] selectImports(AnnotationMetadata importingClassMetadata) {
-		// TODO Auto-generated method stub
-		
+
 		//AnnotationMetadata 实际类型是  StandardAnnotationMetadata 里面的 Annotation[] annotations 属性存
 		//储了标注@Import注解的类(MainConfig2.class) 的三个注解 @Conditional @Configuration @Import
 		

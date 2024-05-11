@@ -32,7 +32,7 @@ public class LinuxCondition implements Condition{
 	 */
 	@Override
 	public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-		// TODO 是否linux系统
+		// 是否linux系统
 		//1、能获取到ioc使用的beanfactory, 创建对象以及bean装配的工厂
 		
 		ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();

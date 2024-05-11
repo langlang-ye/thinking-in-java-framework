@@ -1,15 +1,16 @@
 package com.langlang;
 
+import org.springframework.beans.factory.support.BeanDefinitionReader;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 /**
  * applicationContext.getBean("duck")
- * {
- *     assertBeanFactoryActive(); // 子类org.springframework.context.support.AbstractRefreshableApplicationContext覆盖父类, 空方法
- * 		return getBeanFactory().getBean(name); // 返回的DefaultListableBeanFactory 进入getBean 方法
- * }
- *  调用重载的 doGetBean(name, null, null, false) {
+ *  调用doGetBean(name, null, null, false) {
  *      final String beanName = transformedBeanName(name);
  *      Object sharedInstance = getSingleton(beanName); // 在 getSingleton 中, 通过3层缓存的map 不断获取目标bean; 第一次获取肯定没有 返回 null
  *
@@ -28,7 +29,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  *       String[] dependsOn = mbd.getDependsOn(); // 获取依赖的bean, 返回一个String 数组
  *          // 如果存在依赖的bean, 通过for循环 get(bean) [递归调用] 获取到依赖的bean
  *
- *          // 创建 bean
+ *          // 创建单例 bean
  * 			if (mbd.isSingleton()) {
  * 					sharedInstance = getSingleton(beanName, () -> {   // 创建单例的bean
  * 						try {
@@ -270,7 +271,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * 		Object exposedObject = bean;
  * 		try {
  * 			populateBean(beanName, mbd, instanceWrapper); // 设置 bean 实例的属性, 调用 setXXX 方法  todo 后续总结
- * 			exposedObject = initializeBean(beanName, exposedObject, mbd); // 重要方法 todo 完成 aware 方法回调, 调用初始化方法 , beanPostProcessors
+ * 			exposedObject = initializeBean(beanName, exposedObject, mbd); // 重要方法 参见 {@link com.langlang.config.MainConfigOfLifeCycle}
  * 		 }
  *     if (earlySingletonExposure) { // true
  * 			Object earlySingletonReference = getSingleton(beanName, false); // null
@@ -417,12 +418,15 @@ public class XmlApplicationContextTest {
 
     public static void main(String[] args) {
 
+        Resource resource = new ClassPathResource("applicationContext.xml");
 
+        DefaultListableBeanFactory defaultListableBeanFactory = new DefaultListableBeanFactory();
 
-        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
+        BeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(defaultListableBeanFactory);
 
+        beanDefinitionReader.loadBeanDefinitions(resource);
 
-        Object cat = applicationContext.getBean("tom");
+        Object cat = defaultListableBeanFactory.getBean("tom");
         System.out.println(cat);
     }
 

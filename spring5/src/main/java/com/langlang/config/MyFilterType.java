@@ -23,8 +23,7 @@ public class MyFilterType implements TypeFilter {
 	@Override
 	public boolean match(MetadataReader metadataReader, MetadataReaderFactory metadataReaderFactory)
 			throws IOException {
-		// TODO Auto-generated method stub
-		
+
 		//获取当前类注解的信息
 		AnnotationMetadata annotationMetadata = metadataReader.getAnnotationMetadata();
 		

@@ -40,6 +40,9 @@ public class Person {
 	
 	public Person(String name, Integer age) {
 		super();
+		/* if (name.equals("lisi")) {
+			throw new RuntimeException("重复异常");
+		} */
 		this.name = name;
 		this.age = age;
 	}
@@ -47,7 +50,6 @@ public class Person {
 
 	public Person() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	
 	

@@ -15,7 +15,7 @@ public class BookService {
 	@Qualifier("bookDao")
 //	@Autowired(required = false)
 //	@Resource(name="bookDao2")
-	@Inject  // TODO @Resource @Inject 与  @Autowired 区别， 对比不同版本的实现
+	@Inject  // todo @Resource @Inject 与  @Autowired 区别， 对比不同版本的实现
 	private BookDao bookDao;
 	
 	public void print() {
