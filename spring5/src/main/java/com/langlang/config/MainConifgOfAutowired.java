@@ -76,7 +76,7 @@ public class MainConifgOfAutowired {
 	 * @return
 	 */
 	@Bean
-	public Color color(Car car) { // 方法参数前面的  @Autowired 可以省略
+	public Color color(Car car) { // 搭配@Bean方法参数前面的  @Autowired 可以省略
 		
 		Color color = new Color();
 		color.setCar(car);

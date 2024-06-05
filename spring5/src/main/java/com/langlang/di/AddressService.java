@@ -31,7 +31,8 @@ public class AddressService {
     private DB db; */
 
     /**
-     * Autowired 注解生效的分析:
+     * Autowired 注解生效的分析: AutowiredAnnotationBeanPostProcessor#postProcessProperties 方法生效,
+     * 注入的优先级: @Qualifier  > @Primary > @Priority >  @Autowired 默认按照属性的名称
      * populateBean 方法中
      *  for (BeanPostProcessor bp : getBeanPostProcessors()) { // AutowiredAnnotationBeanPostProcessor#postProcessProperties 方法
      * 				if (bp instanceof InstantiationAwareBeanPostProcessor) {
@@ -120,16 +121,52 @@ public class AddressService {
      *   }
      * 	    matchesBeanName(candidateName, descriptor.getDependencyName()) : 根据 bean 名字匹配
      */
-    @Autowired
+    // @Autowired
     // @Qualifier("oracleDB")
-    private DB db;
+    // private DB db;
 
     /*  @Resource
     private DB db;    */    // 虽然idea 没有报错, 运行的报错: NoUniqueBeanDefinitionException
 
-    /* @Resource(name = "mysqlDB")
-    @Qualifier("oracleDB")
-    private DB db;   */
+    /**
+     *    Resource 注解:
+     *    for (BeanPostProcessor bp : getBeanPostProcessors()) { // CommonAnnotationBeanPostProcessor#postProcessProperties 方法
+     *      	if (bp instanceof InstantiationAwareBeanPostProcessor) {
+     *       		InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) bp;
+     *       		PropertyValues pvsToUse = ibp.postProcessProperties(pvs, bw.getWrappedInstance(), beanName);
+     *       		// 忽略后续逻辑
+     *       	}
+     *    }
+     *    postProcessProperties --> inject --> inject {
+     *        if (this.isField) {
+     * 				Field field = (Field) this.member;
+     * 				ReflectionUtils.makeAccessible(field);
+     * 				field.set(target, getResourceToInject(target, requestingBeanName));
+     * 		  }
+     *    }
+     *    getResourceToInject --> getResource --> autowireResource --> resolveDependency --> doResolveDependency
+     *    doResolveDependency 方法, 和 Autowired 逻辑一样的
+     *    判断是不是标注了 Qualifier 注解
+     *    protected boolean isQualifier(Class<? extends Annotation> annotationType) {
+     * 		for (Class<? extends Annotation> qualifierType : this.qualifierTypes) {
+     * 		// qualifierTypes 是一个 LinkedHashSet, 默认添加了 org.springframework.beans.factory.annotation.Qualifier,
+     * 		// try 里面尝试添加 javax.inject.Qualifier,  catch 不做处理, 就是JSR-330 API not available
+     * 			if (annotationType.equals(qualifierType) || annotationType.isAnnotationPresent(qualifierType)) {
+     * 				return true;
+     * 			            }
+     * 		  }
+     * 		return false;
+     *    }
+     *
+     *
+     *
+     *
+     */
+    @Resource
+    // @Qualifier("mysqlDB")
+    private DB db;
 
+
+    // todo annotationType.isAnnotationPresent(qualifierType) 方法
 
 }
