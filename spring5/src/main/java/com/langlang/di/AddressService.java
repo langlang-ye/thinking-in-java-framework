@@ -163,7 +163,9 @@ public class AddressService {
      *
      */
     @Resource
-    // @Qualifier("mysqlDB")
+    // 在注入组件的位置标注 Qualifier 不指定名字, 在想要注入的类上面标注也 Qualifier, 同样不指定名字, 也可以匹配到.
+    // spring 处理 Qualifier 的逻辑很复杂.
+    @Qualifier
     private DB db;
 
 
