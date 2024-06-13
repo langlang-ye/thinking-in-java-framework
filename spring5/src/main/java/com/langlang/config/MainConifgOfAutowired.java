@@ -35,9 +35,9 @@ import com.langlang.dao.BookDao;
  * 2）、Spring还支持使用 @Resource(JSR250)和 @Inject(JSR330)[java规范的注解]
  * 		@Resource:
  * 			可以和@Autowired一样实现自动装配功能；默认是按照组件名称进行装配的；
- * 			没有能支持@Primary功能  没有@Qualifier功能  没有支持@Autowired（reqiured=false）;
+ * 			没有支持@Autowired（reqiured=false）;
  * 		@Inject:
- * 			需要导入javax.inject的包，和Autowired的功能[可以支持 @Primary @Qualifier]一样。没有required=false的功能；
+ * 			需要导入javax.inject的包，没有required=false的功能；
  *  @Autowired: Spring定义的； @Resource、 @Inject 都是java规范
  * 	
  * AutowiredAnnotationBeanPostProcessor:解析完成自动装配功能；		

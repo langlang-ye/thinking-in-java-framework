@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.annotation.Resources;
+import javax.inject.Inject;
 
 /**
  *  Autowired: 优先按照type在上下文中查找匹配的bean, 如果存在多个同类型的bean, 则按照name进行匹配, 如果名字匹配不到, idea 提示报错
@@ -21,6 +23,7 @@ import javax.annotation.Resource;
  *
  */
 @Service
+// @Resources({@Resource, @Resource})
 public class AddressService {
 
     // @Autowired(required = false)  // required = false, 允许为空, 组件没有注入进来, 使用的时候NPE 要有其他的补救措施
@@ -32,7 +35,8 @@ public class AddressService {
 
     /**
      * Autowired 注解生效的分析: AutowiredAnnotationBeanPostProcessor#postProcessProperties 方法生效,
-     * 注入的优先级: @Qualifier  > @Primary > @Priority >  @Autowired 默认按照属性的名称
+     * Autowired, Resource, Inject 都支持 Qualifier Primary Priority 注解
+     * 注入的优先级: @Qualifier  > @Primary > @Priority >  @[Autowired|Resource|Inject]  默认按照属性的名称
      * populateBean 方法中
      *  for (BeanPostProcessor bp : getBeanPostProcessors()) { // AutowiredAnnotationBeanPostProcessor#postProcessProperties 方法
      * 				if (bp instanceof InstantiationAwareBeanPostProcessor) {
@@ -94,7 +98,6 @@ public class AddressService {
      * }
      *
      *
-     *
      * 	determineAutowireCandidate(matchingBeans, descriptor) { 具体过滤的逻辑
      * 	    Class<?> requiredType = descriptor.getDependencyType();
      * 	    // 通过 Primary 进行筛选, 查看这个 determinePrimaryCandidate 方法, 如果有两个同类型的组件都标注了 Primary, 程序报错: NoUniqueBeanDefinitionException
@@ -146,7 +149,7 @@ public class AddressService {
      *    }
      *    getResourceToInject --> getResource --> autowireResource --> resolveDependency --> doResolveDependency
      *    doResolveDependency 方法, 和 Autowired 逻辑一样的
-     *    判断是不是标注了 Qualifier 注解
+     *    Qualifier 注解分析:
      *    protected boolean isQualifier(Class<? extends Annotation> annotationType) {
      * 		for (Class<? extends Annotation> qualifierType : this.qualifierTypes) {
      * 		// qualifierTypes 是一个 LinkedHashSet, 默认添加了 org.springframework.beans.factory.annotation.Qualifier,
@@ -158,17 +161,29 @@ public class AddressService {
      * 		return false;
      *    }
      *
-     *
-     *
-     *
      */
-    @Resource
+    // @Resource
     // 在注入组件的位置标注 Qualifier 不指定名字, 在想要注入的类上面标注也 Qualifier, 同样不指定名字, 也可以匹配到.
     // spring 处理 Qualifier 的逻辑很复杂.
-    @Qualifier
-    private DB db;
+    // @Qualifier
+    // private DB db;
 
 
     // todo annotationType.isAnnotationPresent(qualifierType) 方法
+
+    /**
+     *  Inject 注解生效分析:
+     *  for (BeanPostProcessor bp : getBeanPostProcessors()) { // AutowiredAnnotationBeanPostProcessor#postProcessProperties 方法
+     *       				if (bp instanceof InstantiationAwareBeanPostProcessor) {
+     *       					InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) bp;
+     *      					PropertyValues pvsToUse = ibp.postProcessProperties(pvs, bw.getWrappedInstance(), beanName);
+     *       				// 忽略后续逻辑
+     *       				              }
+     *                    }
+     *    后续逻辑和  Autowired 一样.
+     */
+    @Inject
+    private DB db;
+
 
 }
