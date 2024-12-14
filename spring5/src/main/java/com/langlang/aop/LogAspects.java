@@ -30,7 +30,7 @@ public class LogAspects {
 //    @Before("public int com.langlang.aop.MathCalculator.div(int, int)") // 方法名字 * 代表任意方法,  参数 .. 两个点 代表任意参数
 //    @Before("public int com.langlang.aop.MathCalculator.*(..)")
 //    @Before("pointCut()")
-    @Before("execution(* com.langlang.aop.MathCalculator.div(int, int))") // TODO 学习 execution 表达式 语法
+    @Before("execution(* com.langlang.aop.MathCalculator.div(int, int))") // * 表示返回值可以任意类型 // TODO 学习 execution 表达式 语法
     public void logStart(JoinPoint joinpoint){ // joinpoint.getSignature() 获取的就是方法的签名
     	Object[] args = joinpoint.getArgs(); // 传递给目标方法的参数
     	
@@ -55,7 +55,6 @@ public class LogAspects {
     public void logException(JoinPoint joinPoint, Exception exception){
         System.out.println("" + joinPoint.getSignature().getName() + "异常... 异常信息是: {" + exception +"}");
     }
-
 
 
 
