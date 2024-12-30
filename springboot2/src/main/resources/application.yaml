@@ -1,0 +1,5 @@
+pay:
+  version: 2014
+#  payId: 00000591432
+  payId: 000092204142622
+  url: https://www.baidu.com
