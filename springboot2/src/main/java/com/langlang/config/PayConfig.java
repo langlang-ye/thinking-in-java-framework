@@ -37,6 +37,7 @@ public class PayConfig {
      * 	    // 说明这个值解析的时候已经转换过了
      * 		return this.source.get(name);
      * 	}
+     *
      *  既然 this.source.get(name) 获取到的值已经是错误的, 说明问题可能解析保存的时候
      *  把断点先打在 OriginTrackedMapPropertySource 构造方法的第一行 # this(name, source, false); #	super(name, source);
      *  debug 启动后, 断点停在了 super(name, source);
@@ -66,11 +67,17 @@ public class PayConfig {
      *    return constructDocument(node); //
      *
      *   org.yaml.snakeyaml.constructor.BaseConstructor#constructMapping2ndStep(org.yaml.snakeyaml.nodes.MappingNode, java.util.Map)
-     *      Object value = constructObject(valueNode);
-     *      mapping.put(key, value);
-     *   进入下面这个方法
+     *   for (NodeTuple tuple : nodeValue) {
+     *             Node keyNode = tuple.getKeyNode();
+     *             Node valueNode = tuple.getValueNode();
+     *             Object key = constructObject(keyNode);
+     *             Object value = constructObject(valueNode);
+     *             mapping.put(key, value);
+     *   } // 循环结束, map 里面保存了解析的键值对, 最后一直返回组装成一个map, 把map 转成list 集合,
+     *   最后遍历中 Collections.unmodifiableMap(loaded.get(i)) 处理成不可修改的 map
+     *   一步步走 进入下面这个方法
      *   org.yaml.snakeyaml.constructor.BaseConstructor#constructObjectNoCheck(Node)
-     *      Construct constructor = getConstructor(node);
+     *      Construct constructor = getConstructor(node);  //
      *      Object data = (constructedObjects.containsKey(node)) ? constructedObjects.get(node)
      *                 : constructor.construct(node);  三目运算符结果false, 走后面的逻辑
      *
@@ -139,18 +146,55 @@ public class PayConfig {
      *  接下来看 node.getTag() 可以看到它的结果 tag:yaml.org,2002:int 根据这个tag, 找到了SafeConstructor.ConstructYamlInt
      *
      *  接下来看看 tag 标签什么时候设置的?
-     *
-     *
-     *
-     *
-     *
-     *
+     *  把断点打在 Node#setTay() 方法上, 断点停下来往前翻看,
+     *   protected Node composeScalarNode(String anchor, List<CommentLine> blockComments) {
+     *      nodeTag = resolver.resolve(NodeId.scalar, ev.getValue(),
+     *                     ev.getImplicit().canOmitTagInPlainScalar());  // 这里是解析出tag
+     *      Node node = new ScalarNode(nodeTag, resolved, ev.getValue(), ev.getStartMark(),
+     *                 ev.getEndMark(), ev.getScalarStyle()); // 创建对象的时候,调用父类的构造方法,调用setTag方法
+     *   }
+     *   接下来进入 resolver.resolve 方法, 重要处理的逻辑, 获取第一个字符, 然后再获取对应的解析器
+     *   resolvers = yamlImplicitResolvers.get(value.charAt(0)); // yamlImplicitResolvers map 中key是Character, value 是 List<ResolverTuple>
+     *       // 如果找到解析器, 多个解析器遍历处理, 有匹配的立刻返回匹配的 tag
+     *        if (resolvers != null) {
+     *                 for (ResolverTuple v : resolvers) {
+     *                     Tag tag = v.getTag();
+     *                     Pattern regexp = v.getRegexp();
+     *                     if (regexp.matcher(value).matches()) {
+     *                         return tag;
+     *                     }
+     *                 }
+     *             }
+     *             // 如果没有获取到解析器, 尝试按照null 来处理
+     *             if (yamlImplicitResolvers.containsKey(null)) {
+     *                 for (ResolverTuple v : yamlImplicitResolvers.get(null)) {
+     *                     Tag tag = v.getTag();
+     *                     Pattern regexp = v.getRegexp();
+     *                     if (regexp.matcher(value).matches()) {
+     *                         return tag;
+     *                     }
+     *                 }
+     *             }
+     *             // 最后一个   switch (kind)  返回 str seq map
+     *  ..... 经历层层返回来, 中间组装成子节点, 到这一行
+     *  Node node = composer.getNode();
+     *  下面是INT 类型的正则表达式, 以0开头 数字0-7 如果出现 8 9 就不匹配, 最后就是按照字符串处理
+     *  public static final Pattern INT = Pattern
+     *             .compile("^(?:" +
+     *                     "[-+]?0b_*[0-1]+[0-1_]*" + // (base 2)
+     *                     "|[-+]?0_*[0-7]+[0-7_]*" + // (base 8)
+     *                     "|[-+]?(?:0|[1-9][0-9_]*)" + // (base 10)
+     *                     "|[-+]?0x_*[0-9a-fA-F]+[0-9a-fA-F_]*" + // (base 16)
+     *                     "|[-+]?[1-9][0-9_]*(?::[0-5]?[0-9])+" + // (base 60)
+     *                     ")$");
+     * 解决办法: 由于解析过程中, 是根据第一个字符获取对应的解析器, 后续有可能匹配到其他的解析器造成解析结果不是我们期望的结果.
+     * 如果只想要按照字符串的方式解析, 可以加上单引号|双引号(' ")都可以
      *
      *
      *
      */
     @Value("${pay.payId}")
-    private String payId;
+    private int payId;
 
     @Value("${pay.version}")
     private String version;
@@ -158,7 +202,7 @@ public class PayConfig {
     @Value("${pay.url}")
     private String url;
 
-    public String getPayId() {
+    public int getPayId() {
         return payId;
     }
 
