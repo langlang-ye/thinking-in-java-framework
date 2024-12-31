@@ -18,15 +18,11 @@ public class HelloController implements ApplicationContextAware {
 
     @GetMapping("/hello")
     public String sayHello() {
-        System.out.println("hello 111111111111111111 start ");
         PayConfig payConfig = applicationContext.getBean("payConfig", PayConfig.class);
 
         System.out.println(payConfig.getVersion());
-        System.out.println("hello 111111111111111111 mind ");
-
         System.out.println(payConfig.getPayId());
         System.out.println(payConfig.getUrl());
-        System.out.println("hello 111111111111111111 end ");
 
         return "Hello World";
     }
