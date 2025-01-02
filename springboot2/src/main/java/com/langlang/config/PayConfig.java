@@ -152,8 +152,8 @@ public class PayConfig {
      *                     ev.getImplicit().canOmitTagInPlainScalar());  // 这里是解析出tag
      *      Node node = new ScalarNode(nodeTag, resolved, ev.getValue(), ev.getStartMark(),
      *                 ev.getEndMark(), ev.getScalarStyle()); // 创建对象的时候,调用父类的构造方法,调用setTag方法
-     *   }
-     *   接下来进入 resolver.resolve 方法, 重要处理的逻辑, 获取第一个字符, 然后再获取对应的解析器
+     *   };
+     *   接下来进入org.yaml.snakeyaml.resolver.Resolver.resolve 方法, 重要处理的逻辑, 获取第一个字符, 然后再获取对应的解析器
      *   resolvers = yamlImplicitResolvers.get(value.charAt(0)); // yamlImplicitResolvers map 中key是Character, value 是 List<ResolverTuple>
      *       // 如果找到解析器, 多个解析器遍历处理, 有匹配的立刻返回匹配的 tag
      *        if (resolvers != null) {
@@ -194,7 +194,7 @@ public class PayConfig {
      *
      */
     @Value("${pay.payId}")
-    private int payId;
+    private String payId;
 
     @Value("${pay.version}")
     private String version;
@@ -202,7 +202,7 @@ public class PayConfig {
     @Value("${pay.url}")
     private String url;
 
-    public int getPayId() {
+    public String getPayId() {
         return payId;
     }
 

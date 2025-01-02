@@ -18,8 +18,6 @@ public class PropertyConfig extends Properties {
      * mbd.getTargetType().getSuperclass() 返回值 class com.langlang.config.PropertyConfig
      * XXController XXService 的 RootBeanDefinition 对比一下 ?
      *
-     * todo  SpringConfigurationPropertySources 聚合的list 对象 遍历问题?
-     * sources  cache
      *
      *
      */

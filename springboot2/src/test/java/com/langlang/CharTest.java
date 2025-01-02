@@ -5,6 +5,7 @@ public class CharTest {
     public static void main(String[] args) {
 
         String first = "-+0123456789";
+        first = "null";
         char[] chrs = first.toCharArray();
         for (int i = 0, j = chrs.length; i < j; i++) {
             Character theC = Character.valueOf(chrs[i]);
