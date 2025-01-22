@@ -1,6 +1,6 @@
 package com.langlang.analyze;
 
-//{@link org.springframework.boot.context.properties.source.SpringConfigurationPropertySources}
+// {@link org.springframework.boot.context.properties.source.SpringConfigurationPropertySources}
 // @see org.springframework.boot.context.properties.source.SpringConfigurationPropertySources
 
 /**
@@ -10,7 +10,7 @@ package com.langlang.analyze;
  * org.springframework.boot.context.properties.bind.Binder#findProperty(ConfigurationPropertyName name, Bindable <T> target,
  * 			Context context) {
  * 		for (ConfigurationPropertySource source : context.getSources()) {	//  context.getSources() 是SpringConfigurationPropertySources 的
- * 	对, 有两个属性 sources, cache
+ * 	对象, 有两个属性 sources, cache
  * 	}
  * 	来到 iterator 方法
  * 	return new SourcesIterator(this.sources.iterator(), this::adapt);
@@ -47,10 +47,27 @@ package com.langlang.analyze;
  * 				this.next = this.adapter.apply(candidate);
  * 				}
  *
- * 			return this.next        ;
+ * 			return this.next;
  * 		}
  *      private void push(ConfigurableEnvironment environment) {
  * 			this.iterators.push(environment.getPropertySources().iterator());
+ * 		}
+ *
+ * 将 PropertySource 转化成 ConfigurationPropertySource 对象, cache 是一个 ConcurrentReferenceHashMap
+ * 先从缓存中取, 如果没有再通过 SpringConfigurationPropertySource.from(source) 获取, 然后存在缓存中, 避免了重复解析
+ * 	private ConfigurationPropertySource adapt(PropertySource<?> source) {
+ * 		ConfigurationPropertySource result = this.cache.get(source);
+ * 		// Most PropertySources test equality only using the source name, so we need to
+ * 		// check the actual source hasn't also changed.
+ * 		if (result != null && result.getUnderlyingSource() == source) {
+ * 			return result;
+ * 		        }
+ * 		result = SpringConfigurationPropertySource.from(source);
+ * 		if (source instanceof OriginLookup) {
+ * 			result = result.withPrefix(((OriginLookup<?>) source).getPrefix());
+ *        }
+ * 		this.cache.put(source, result);
+ * 		return result;
  * 		}
  *
  *
