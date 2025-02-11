@@ -443,24 +443,6 @@ public class PropertyConfig extends Properties {
      *
      *
      *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
      */
     public static final String PROPERTY_PREFIX = "lang";
 
