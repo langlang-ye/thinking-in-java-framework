@@ -384,6 +384,17 @@ public class PropertyConfig2 {
     private String firstName;
     private String lastName;
 
+    public boolean isAdult() {
+        return adult;
+    }
+
+    public void setAdult(boolean adult) {
+        System.out.println("setAdult: " + adult);
+        this.adult = adult;
+    }
+
+    private boolean adult;
+
 
     public String getFirstName() {
         return firstName;
